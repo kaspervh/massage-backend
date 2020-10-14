@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :work_days
+  resources :appointments
   resources :products
+  resources :work_days
   post '/login' => 'authetication#login'
   resources :users
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
