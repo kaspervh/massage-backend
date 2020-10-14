@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :appointments
   resources :products
   resources :work_days
   post '/login' => 'authetication#login'
