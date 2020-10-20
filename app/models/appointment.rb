@@ -3,6 +3,7 @@ class Appointment < ApplicationRecord
 
   #will figure out what days have available time for the massage duration
   def self.get_times(duration)
+    #return duration.to_i
     work_days = get_usable_work_days()
     possible_appointments = []
     #will go through each work day
@@ -12,21 +13,35 @@ class Appointment < ApplicationRecord
       #otherwise the code will check how many times 
       # the duration will fit inside the open work day plus 15 minutes of preperation
       if work_day.appointments.any?
-        return 'has work days'
+        new_appointments = []
+        current_appointments = where(work_day_id: work_day.id)
+        start_time = work_day.start_time
+
+        current_appointments.each do |current_appointment|
+          new_appointments.push(calculate_appointment_times(start_time, current_appointment.start_time, work_day, duration).flatten)
+          start_time = current_appointment.end_time.to_time + 15.minutes
+        end 
+        new_appointments.push(calculate_appointment_times(start_time, work_day.end_time, work_day, duration))
+        possible_appointments.push(new_appointments.flatten)
       else
         work_day_appointments= []
-        appointment_start_time = work_day.start_time
-        work_day_duration_in_minutes = (work_day.end_time - work_day.start_time) /60        
-
-        (work_day_duration_in_minutes / (duration.to_i + 15)).to_i.times do
-          work_day_appointments.push({work_day_id: work_day.id, start_time: appointment_start_time, end_time: appointment_start_time + duration.to_i.minutes}) if (appointment_start_time + duration.to_i.minutes) <= work_day.end_time
-          appointment_start_time = appointment_start_time + (duration.to_i + 15).minutes
-        end
-        possible_appointments.push(work_day_appointments)
-        
+        work_day_appointments.push(calculate_appointment_times(work_day.start_time, work_day.end_time, work_day, duration ))
+        possible_appointments.push(work_day_appointments.flatten)
       end
     end
     possible_appointments
+  end
+
+  def self.calculate_appointment_times(start_time, end_time, work_day, duration)
+    new_appointments = []
+    
+    time_between_in_minutes = (end_time.to_time - start_time.to_time) /60
+
+    (time_between_in_minutes / (duration.to_i + 15).to_i).floor.times do
+      new_appointments.push({work_day_id: work_day.id, start_time: start_time, end_time: (start_time + duration.to_i.minutes)}) if (start_time + duration.to_i.minutes) <= end_time
+      start_time = start_time + (duration.to_i +15).minutes
+    end
+    new_appointments
   end
 
   # will get the days that are still current
