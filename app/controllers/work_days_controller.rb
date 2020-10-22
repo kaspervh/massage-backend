@@ -4,14 +4,15 @@ class WorkDaysController < ApplicationController
   # GET /work_days
   def index
     user = User.find(params[:userId])
-    @work_days = user.work_days.all
+    @work_days = user.work_days.all.map{|wd| wd = ({id: wd.id, user_id: wd.user_id, start_time: wd.start_time, end_time: wd.end_time, created_at: wd.created_at, updated_at: wd.updated_at, appointments: wd.appointments})}
+    
 
     render json: @work_days
   end
 
   # GET /work_days/1
   def show
-    render json: @work_day
+    render json: {id: @work_day.id, user_id: @work_day.user_id, start_time: @work_day.start_time, end_time: @work_day.end_time, created_at: @work_day.created_at, updated_at: @work_day.updated_at, appointments: @work_day.appointments.order(:start_time)}
   end
 
   # POST /work_days
