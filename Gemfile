@@ -27,12 +27,11 @@ gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
 gem 'bootsnap', '>= 1.4.2', require: true
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'rack-cors', :require => 'rack/cors'
 end
 
 group :development do
