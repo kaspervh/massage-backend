@@ -82,5 +82,5 @@ test:
 production:
   <<: *default
   database: massage_production
-  username: massage
+  username: postgress
   password: <%= ENV['MASSAGE_DATABASE_PASSWORD'] %>
