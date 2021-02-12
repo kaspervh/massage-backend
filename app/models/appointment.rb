@@ -11,7 +11,7 @@ class Appointment < ApplicationRecord
       
       #if the work day has any appointments logic
       #otherwise the code will check how many times 
-      # the duration will fit inside the open work day plus 15 minutes of preperation
+      # the duration will fit inside the open work day plus 30 minutes of preperation
       if work_day.appointments.any?
         new_appointments = []
         current_appointments = where(work_day_id: work_day.id)
@@ -19,7 +19,7 @@ class Appointment < ApplicationRecord
 
         current_appointments.each do |current_appointment|
           new_appointments.push(calculate_appointment_times(start_time, current_appointment.start_time, work_day, duration).flatten)
-          start_time = current_appointment.end_time.to_time + 15.minutes
+          start_time = current_appointment.end_time.to_time + 30.minutes
         end 
         new_appointments.push(calculate_appointment_times(start_time, work_day.end_time, work_day, duration))
         possible_appointments.push(new_appointments.flatten)
@@ -37,9 +37,9 @@ class Appointment < ApplicationRecord
     
     time_between_in_minutes = (end_time.to_time - start_time.to_time) /60
 
-    (time_between_in_minutes / (duration.to_i + 15).to_i).floor.times do
+    (time_between_in_minutes / (duration.to_i + 30).to_i).floor.times do
       new_appointments.push({work_day_id: work_day.id, start_time: start_time, end_time: (start_time + duration.to_i.minutes)}) if (start_time + duration.to_i.minutes) <= end_time
-      start_time = start_time + (duration.to_i +15).minutes
+      start_time = start_time + (duration.to_i +50).minutes
     end
     new_appointments
   end
