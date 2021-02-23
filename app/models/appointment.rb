@@ -39,7 +39,7 @@ class Appointment < ApplicationRecord
 
     (time_between_in_minutes / (duration.to_i + 30).to_i).floor.times do
       new_appointments.push({work_day_id: work_day.id, start_time: start_time, end_time: (start_time + duration.to_i.minutes)}) if (start_time + duration.to_i.minutes) <= end_time
-      start_time = start_time + (duration.to_i +50).minutes
+      start_time = start_time + (duration.to_i + 30).minutes
     end
     new_appointments
   end
