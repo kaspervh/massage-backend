@@ -46,6 +46,6 @@ class AppointmentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def appointment_params
-      params.require(:appointment).permit(:work_day_id, :first_name, :last_name, :phone, :email, :start_time, :end_time)
+      params.require(:appointment).permit(:work_day_id, :first_name, :last_name, :phone, :email, :start_time, :end_time, :service)
     end
 end
