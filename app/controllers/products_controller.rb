@@ -1,9 +1,19 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :update, :destroy]
 
+  #GET /move_to_top
+  def move_to_top
+    Product.index_product_to_first(params[:product_id])
+
+    @products = Product.all.order("index")
+
+    render json: @products
+
+  end
+
   # GET /products
   def index
-    @products = Product.all
+    @products = Product.all.order("index")
 
     render json: @products
   end
@@ -18,6 +28,7 @@ class ProductsController < ApplicationController
     @product = Product.new(product_params)
 
     if @product.save
+      @product.update(index: Product.all.count + 1)
       render json: @product, status: :created, location: @product
     else
       render json: @product.errors, status: :unprocessable_entity
@@ -46,6 +57,6 @@ class ProductsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def product_params
-      params.require(:product).permit(:user_id, :name, :duration, :description, :promo_image)
+      params.require(:product).permit(:product_id, :user_id, :name, :duration, :description, :promo_image, :index)
     end
 end
